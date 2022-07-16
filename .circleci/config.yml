@@ -15,6 +15,7 @@ jobs:
           name: Generate config
           command: |
             cd .circleci/configs
-            cue export sample1.yml sample2.yml sample9.yml --out yaml > ../generated_config.yml
+            find . -type f -name "*.yml" | awk '{printf "%s ", $0}' \
+            | xargs -I {} sh -c 'cue export {} --out yaml' | tee ../generated_config.yml
       - continuation/continue:
           configuration_path: .circleci/generated_config.yml
